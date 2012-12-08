@@ -1,21 +1,31 @@
 
 var ambulanceMain = function(){
 
-	this.ambulanceView = null;
-	this.ambulanceContext = null;
+	/**
+	 * Global AmbulanceView Object so that it can be used by other Classes.Without and problem.
+	 * @type {[AmbulanceView]}
+	 */
+	AmbulanceView = null;
+
+	/**
+	 * Global AmbulanceContext Object so that it can be used by other classes without passing them the object.
+	 * @type {[type]}
+	 */
+	AmbulanceContext = null;
 
 	this.init = function(){
 		this.loadDependencies();
 		this.load();
 	}
 	this.loadDependencies = function(){
-		this.ambulanceView = new ambulanceView(this);
-		this.ambulanceView.init();
-		this.ambulanceView.drawPath([[5,5],[5,6],[6,6]]);
+		AmbulanceView = new ambulanceView(this);
+		AmbulanceView.init();
+		AmbulanceView.drawPath([[5,5],[5,6],[6,6]]);
+		var testPerson = new Person([5,10],12);
+		testPerson.init(1);
 	}
 
 	this.load = function(){
-		this.ambulanceView.createMesh();
 		//this.ambulanceView.createMesh1();
 	}
 
