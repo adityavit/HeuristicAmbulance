@@ -33,23 +33,28 @@ var Hospital = function(cordiante){
 	this.init = function(hospitalId){
 
 		this.hospitalId = hospitalId;
+		for(var ambulanceNumber in this.numberOfAmbulance){
+			this.ambulances.push(new Ambulance(this.numberOfAmbulance*hospitalId + ambulanceNumber,this.cordinate));
+		}
 
 	}
 
 	/**
-	 * Selects the ambulance to use.
+	 * Selects the ambulance to use.And removes the ambulance from the current list of ambulances.
 	 * @return {[type]}
 	 */
-	this.selectAmbulance = function(){
-
+	this.selectAmbulance = function(ambulanceId){
+		var ambulance = this.getAmbulanceObject(ambulanceId);
+		this.removeAmbulance(ambulanceId);
+		return ambulance;
 	}
 
 	/**
 	 * Returns the ambulances for the hospital.
-	 * @return {[type]}
+	 * @return {[list]} List of ambulances Objects currently with Hospital.
 	 */
 	this.getAmbulances = function(){
-
+		return this.ambulances;
 	}
 
 	/**
@@ -57,23 +62,18 @@ var Hospital = function(cordiante){
 	 * @return {[type]}
 	 */
 	this.getCordinates = function(){
-
+		this.cordiante;
 	}
 
-	/**
-	 * Returns the ambulance which are available in the Hospital.
-	 * @return {[type]}
-	 */
-	this.getAvailableAmbulance = function(){
-
-	}
 
 	/**
 	 * Adds the ambulance to the hospital when coming from another hospital.
+	 * Adds the hospital current Co-ordiantes to the ambulance.Also adds the ambulance to data structure.
 	 * @param {[Ambulance]} ambulance [description]
 	 */
 	this.addAmbulance = function(ambulance){
-
+		ambulance.updateCordinateOfAmbulance(this.cordiante);
+		this.ambulances.push(ambulance);
 	}
 
 	/**
@@ -82,7 +82,14 @@ var Hospital = function(cordiante){
 	 * @return {[type]}
 	 */
 	this.removeAmbulance = function(ambulanceId){
+		var tempAmbulances = [];
+		for(var ambulance in this.ambulances){
+			if(this.ambulances[ambulance].getAmbulanceId() != ambulanceId){
+				tempAmbulances.push(this.ambulances[ambulance]);
+			}
+		}
 
+		this.ambulances = tempAmbulances;
 	}
 
 	/**
@@ -91,8 +98,11 @@ var Hospital = function(cordiante){
 	 * @return {[type]}
 	 */
 	this.getAmbulanceObject = function(ambulanceId){
-
+		for(var ambulance in this.ambulances){
+			if(this.ambulances[ambulance].getAmbulanceId() == ambulanceId){
+				return this.ambulances[ambulance];
+			}
+		}
 	}
-
 
 }

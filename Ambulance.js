@@ -7,28 +7,52 @@ var Ambulance = function(){
 
 	this.personList = [];
 
-	this.isAmbulanceBusy = false;
-
 	this.ambulanceCordinates = null;
+
+	this.ambulanceCounterValue = 0;
+
+	this.ambulanceCordinate = null;
+
+	this.ambulanceSelected = false;
+
 
 	/**
 	 * Inits the ambulance when the hospital is loaded.Every Hospital should store the ambulance object which it created..
 	 * @param  {[type]} ambulanceId [description]
 	 * @return {[type]}
 	 */
-	this.init = function(ambulanceId){
+	this.init = function(ambulanceId,cordinate){
 
 		this.ambulanceId = ambulanceId;
 
+		this.ambulanceCordinate = cordinate;
+
+	}
+
+	this.getAmbulanceId = function(){
+		return this.ambulanceId;
 	}
 
 	/**
-	 * The ambulance conrdinates which are updated for every time stamp.Depending on the path.
-	 * After Updating should ask UI to update it's position on the UI.
-	 * @return {[type]}
+	 * Updates the current co-oridnate of the ambulance
+	 * @param  {[list[x,y]]} cordinate [description]
+	 * @return {[type]}           [description]
 	 */
-	this.updateCordinateOfAmbulance = function(){
+	this.updateCordinateOfAmbulance = function(cordinate){
+		this.ambulanceCordinate = cordinate;
 
+		//Shows the ambulance updated UI on the Grid if it is not in the hospital i.e. it is not selected.
+		if(this.ambulanceSelected){
+			this.showAmbulance();
+		}
+	}
+
+	/**
+	 * Called when the ambulance is selected to mark that the ambulance is leaving hospital to pick person.
+	 * @return {[type]} [description]
+	 */
+	this.selectAmbulance = function(){
+		this.ambulanceSelected = true;
 	}
 
 	/**
@@ -36,34 +60,34 @@ var Ambulance = function(){
 	 * @return {[type]}
 	 */
 	this.showAmbulance = function(){
-
+		//Calls the UI to show the ambulance on the current co-ordinate Value.
 	}
 
-	/**
-	 * Ambulance Path passed as arguments which is a list of points to the end Point.
-	 * Once Got a path the ambulance will have to move it self one step forward on the path at every timestamp.
-	 * @return {[type]}
-	 */
-	this.ambulancePath = function(){
 
-	}
-
-	/**
-	 * Will be called by the runATimeStamp in ambulanceContext Update the ambulance if it is selected.Else leave the ambulance
-	 * as it is.At every function call it updates it position with the new cordinates in the path by calling the ui.
-	 * @return {[type]}
-	 */
-	this.updateOnTimeStamp = function(){
-
-	}
 
 	/**
 	 * Stores the list of the person it has picked.Should call the personObj to hide itself from the UI.
+	 * Also Increaments one counter value for pickup the person.
 	 * @param  {[type]} personObj [description]
 	 * @return {[type]}
 	 */
 	this.pickPerson = function(personObj){
+		// Pick the person only when the person is alive else mark the person as dead on the UI.
+		if(personObj.isPersonAlive(this.ambulanceCounterValue)){
+			this.personList.push(personObj);
+			personObj.pickedByAmbulance();
+			this.ambulanceCounterValue++;
+		}else{
+			personObj.markPersonDead();
+		}
+	}
 
+	/**
+	 * Returns the value of the ambulanceCounterValue.
+	 * @return {[type]} [description]
+	 */
+	this.getAmbulanceCounterValue = function(){
+		return this.ambulanceCounterValue;
 	}
 
 	/**
@@ -73,6 +97,30 @@ var Ambulance = function(){
 	 * @return {[type]}
 	 */
 	this.registerToHospital = function(hospital){
-		
+		var numberOfPersonInAmbulance = this.personList.length;
+		for(person in this.personList){
+			//if the person is alive then ask the person object to update the context with alive person count.
+			if(this.personList[person].isPersonAlive(this.ambulanceCounterValue)){
+				this.personList[person].markPersonAlive(); //Increase the context person alive count.
+			}else{
+				this.personList[person].markPersonDead(); // Increase the context person dead count.
+			}
+		}
+
+		/**
+		 * Assuming that all the persons are removed parallely.
+		 * And Unloading of one person doesn't effect the liveliness of another person.
+		 */
+		this.ambulanceCounterValue += numberOfPersonInAmbulance;
+
+		/**
+		 * All the persons are unloaded.So make the ambulance personList as Empty.
+		 * @type {Array}
+		 */
+		this.personList = [];
+		//As ambulance reaches Hospital it not selected any more.
+		this.ambulanceSelected = false;
+
+		hospital.addAmbulance(this);
 	}
 }
