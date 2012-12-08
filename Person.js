@@ -13,13 +13,15 @@ var Person = function(cordinates,timer){
 
 	this.personDisplayed = false;
 
+	this.personUI = null;
+
 	/**
 	 * Intializes the person Object.Calls the UI to show the person.
 	 * @return {[type]}
 	 */
 	this.init = function(personId){
 		this.personId = personId;
-		this.showPerson();
+		this.loadUI();
 	}
 
 
@@ -46,6 +48,26 @@ var Person = function(cordinates,timer){
 	}
 
 
+	this.loadUI = function(){
+
+		this.showPerson();
+		/**
+		 * Call the UI to attach events to the person also to show it on the UI.
+		 */
+		
+		var getCanvasXY = AmbulanceView.getCanvasXY(this.personCordinates);
+
+		this.personUI = new Kinetic.Circle({
+	        x: getCanvasXY[0],
+	        y: getCanvasXY[1],
+	        radius: 5,
+	        fill: 'green',
+	        stroke: 'black',
+	        strokeWidth: 1
+      		});
+
+		AmbulanceView.addObjectToLayer(this.personUI);
+	}
 
 	/**
 	 * Shows the person on the UI.
@@ -53,9 +75,6 @@ var Person = function(cordinates,timer){
 	 */
 	this.showPerson = function(){
 		this.personDisplayed = true;
-		/**
-		 * Call the UI to attach events to the person also to show it on the UI.
-		 */
 	}
 
 	/**
