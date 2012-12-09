@@ -1,10 +1,12 @@
-var ambulanceContext = function(){
+var ambulanceContext = function(ambulanceMain){
 
 	this.numberOfPersons = 30;
 
 	this.numberOfHospitals = 5;
 
 	this.ObjectsToRunTimeStamp = [];
+
+	this.ambulanceMain = ambulanceMain;
 
 	this.init = function(){
 
