@@ -8,6 +8,10 @@ var ambulanceContext = function(ambulanceMain){
 
 	this.ambulanceMain = ambulanceMain;
 
+	this.hospitals = {};
+
+	this.registeredHospitals = 0;
+
 	this.init = function(){
 
 	}
@@ -32,10 +36,21 @@ var ambulanceContext = function(ambulanceMain){
 	/**
 	 * Creates hospital object with the ambulances.
 	 * Called by the UI provided with co-ordinates of the grid.
+	 * If all the hospitals are registered calls the view to show the start button.
 	 * @return {[type]}
 	 */
-	this.registerHospital = function(){
-
+	this.registerHospital = function(hospitalCord,hospitalId){
+		if(!this.hospitals[hospitalId]){
+			this.hospitals[hospitalId] = new Hospital(hospitalCord);
+			this.hospitals[hospitalId].init(hospitalCord);
+			this.registeredHospitals++;
+			console.log(this.registeredHospitals);
+			if(this.registeredHospitals == this.numberOfHospitals){
+				 AmbulanceView.hospitalRegistered();
+			}
+		}else{
+			this.hospitals[hospitalId].updateCordinate(hospitalCord);
+		}
 	}
 
 	/**

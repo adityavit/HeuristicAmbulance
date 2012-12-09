@@ -1,4 +1,4 @@
-var Hospital = function(cordiante){
+var Hospital = function(cordinate){
 
 	/**
 	 * default number of ambulances in the hospital.
@@ -10,7 +10,7 @@ var Hospital = function(cordiante){
 	 * Stores the cordinates for the hospital.
 	 * @type {[type]}
 	 */
-	this.cordinate = cordiante;
+	this.cordinate = cordinate;
 
 	/**
 	 * Stores the ambulance in the hospital.
@@ -33,10 +33,14 @@ var Hospital = function(cordiante){
 	this.init = function(hospitalId){
 
 		this.hospitalId = hospitalId;
-		for(var ambulanceNumber in this.numberOfAmbulance){
+		for(var ambulanceNumber = 0; ambulanceNumber < this.numberOfAmbulance; ambulanceNumber++){
 			this.ambulances.push(new Ambulance(this.numberOfAmbulance*hospitalId + ambulanceNumber,this.cordinate));
 		}
 
+	}
+
+	this.updateCordinate = function(cordinate){
+		this.cordiante = cordinate;
 	}
 
 	/**

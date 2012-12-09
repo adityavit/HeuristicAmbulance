@@ -22,6 +22,8 @@ var ambulanceView = function(ambulanceMain){
 
 	this.hospitalSelected = null;
 
+	this.hospitalBoxSize = 20;
+
 	this.init = function(){ 
 		this.stage = new Kinetic.Stage({
         	container: 'ambulanceDiv',
@@ -111,11 +113,11 @@ var ambulanceView = function(ambulanceMain){
 	 */
 	this.selectHospital = function(pointObject){
 		var hospitalNode = this.hospitalSelected["node"];
-		hospitalNode.setX(pointObject.getX()-10);
-		hospitalNode.setY(pointObject.getY()-10);
+		var hospitalCordinate = this.getGridXY([pointObject.getX(),pointObject.getY()]);
+		hospitalNode.setX(pointObject.getX()-this.hospitalBoxSize/2);
+		hospitalNode.setY(pointObject.getY()-this.hospitalBoxSize/2);
 		this.hospitalSelected["layer"].draw();
-		console.log(pointObject.getX() + " " + pointObject.getY());
-		console.log(this.getGridXY([pointObject.getX(),pointObject.getY()]))
+		AmbulanceContext.registerHospital(hospitalCordinate,this.hospitalSelected["id"]);
 	}
 
 	/**
@@ -254,11 +256,11 @@ var ambulanceView = function(ambulanceMain){
 		hospitalLayer = new Kinetic.Layer();
 		for(var hospital = 0; hospital < AmbulanceContext.numberOfHospitals; hospital++){
 			var hospitalObj = new Kinetic.Rect({
-		        x: this.canvasSize - this.grids + 20*(hospital+1),
+		        x: this.canvasSize - this.grids - this.hospitalBoxSize + 30*(hospital+1),
 		        y: this.grids + 100,
 		        id: hospital+1,
-		        width: 20,
-		        height: 20,
+		        width: this.hospitalBoxSize,
+		        height: this.hospitalBoxSize,
 		        fill: 'blue',
 		        stroke: 'black',
 		        strokeWidth: 1
@@ -284,6 +286,45 @@ var ambulanceView = function(ambulanceMain){
 			}
 		});
 		this.stage.add(hospitalLayer);
+	}
+
+	/**
+	 * Function called when all the hospitals are placed on the grid.
+	 * @return {[type]} [description]
+	 */
+	this.hospitalRegistered = function(){
+		var startButtonLayer = new Kinetic.Layer(); 	
+		var startButton = new Kinetic.Rect({
+		        x: this.canvasSize - this.grids - this.hospitalBoxSize + 30,
+		        y: this.canvasSize - this.grids*8,
+		        width: 100,
+		        height: 40,
+		        fill: 'green',
+		        stroke: 'black',
+		        strokeWidth: 2
+		    });
+
+		var startText = new Kinetic.Text({
+	        x: this.canvasSize - this.grids - this.hospitalBoxSize + 40,
+	        y: this.canvasSize - this.grids*8 + 12,
+	        text: 'Start ->',
+	        fontSize: 12,
+	        fontFamily: 'Calibri',
+	        textFill: 'black'
+      	});
+
+		startButtonLayer.add(startButton);
+      	startButtonLayer.add(startText);
+      	startButtonLayer.on("mousedown",function(){
+      		AmbulanceView.startGame();
+      		this.hide();
+      	});
+		this.stage.add(startButtonLayer);
+
+	}
+
+	this.startGame = function(){
+		alert("Game Started");
 	}
 
 }
