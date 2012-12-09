@@ -1,6 +1,6 @@
 var ambulanceContext = function(ambulanceMain){
 
-	this.numberOfPersons = 30;
+	this.numberOfPersons = 35;
 
 	this.numberOfHospitals = 5;
 
@@ -11,9 +11,13 @@ var ambulanceContext = function(ambulanceMain){
 	this.hospitals = {};
 
 	this.registeredHospitals = 0;
+     
+        //Used to Generate Living time of people
+        this.minLivingTime = 30
+        this.maxLivingTime = 50
 
 	this.init = function(){
-
+          this.generatePersonMap()
 	}
 
 	/**
@@ -22,8 +26,52 @@ var ambulanceContext = function(ambulanceMain){
 	 * @return {[type]}
 	 */
 	this.generatePersonMap = function(){
+	   //Generate X, Y and timer for each person 	
+	   x = []
+	   y = []	
+	   time_to_live = []
 
+	   for(var i = 0; i < this.numberOfPersons; i++) 
+	   {
+	      do
+	      {
+		var x_cor = getRandomInt(0, AmbulanceView.grids)
+		var y_cor = getRandomInt(0, AmbulanceView.grids)	
+                if (!(include(x,x_cor) && include(y,y_cor))) {
+                   //Ensures unique coordinates for a person
+	           x.push(x_cor)
+	           y.push(y_cor)
+                   break
+	        }
+                                               
+	      } while (true)
+
+	      //Generate a Living Time 
+              var timer = getRandomInt(this.minLivingTime, this.maxLivingTime)
+	      time_to_live.push(timer)
+              //Generate the object
+              var newPerson = new Person([x[i],y[i]],time_to_live[i]);
+	      newPerson.init(i+1);
+	   }
 	}
+
+
+       /**
+        * Check if the array already contains the element
+        */
+	function include(arr,obj) {
+   		 return (arr.indexOf(obj) != -1);
+	}
+
+ 
+	/**
+	 * Generates a Random Integer between min and max
+	 */
+	function getRandomInt (min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+
 
 	/**
 	 * Create object of the person and calls calls UI load the person.
