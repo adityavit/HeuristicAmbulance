@@ -184,7 +184,7 @@ var ambulanceContext = function(ambulanceMain){
 
 	/**
 	 *  Removes the Person from internal structure 'Persons' which stores the persons who are in the game
-	 *  i.e not dead or not at the hospital. Should be called from Person.js in either markPersonDead or when they reach hospital
+	 *  i.e not dead or not at the hospital. Should be called from Person.js in markPersonAlive or markPersonDead
 	 *  Input : Person id
 	 */
 	 this.removePlayingPerson = function(pid) {
