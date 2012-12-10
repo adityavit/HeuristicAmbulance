@@ -1,6 +1,6 @@
 var ambulanceContext = function(ambulanceMain){
 
-	this.numberOfPersons = 35;
+	this.numberOfPersons = 100;
 
 	this.numberOfHospitals = 5;
 
@@ -27,43 +27,32 @@ var ambulanceContext = function(ambulanceMain){
 	 */
 	this.generatePersonMap = function(){
 	   //Generate X, Y and timer for each person 	
-	   x = []
-	   y = []	
-	   time_to_live = []
-
+           hashes = []
 	   for(var i = 0; i < this.numberOfPersons; i++) 
 	   {
+	      var x_cor, y_cor, key
+            	
 	      do
 	      {
-		var x_cor = getRandomInt(0, AmbulanceView.grids)
-		var y_cor = getRandomInt(0, AmbulanceView.grids)	
-                if (!(include(x,x_cor) && include(y,y_cor))) {
-                   //Ensures unique coordinates for a person
-	           x.push(x_cor)
-	           y.push(y_cor)
-                   break
-	        }
-                                               
+		x_cor = getRandomInt(0, AmbulanceView.grids)
+		y_cor = getRandomInt(0, AmbulanceView.grids)
+                //Hash this coordinates	
+                key = x_cor * (AmbulanceView.grids) + y_cor
+                if(hashes.indexOf(key) == -1) 
+		{ 
+                  //Unique Coordinate
+		  break                          
+		} 
 	      } while (true)
-
-	      //Generate a Living Time 
-              var timer = getRandomInt(this.minLivingTime, this.maxLivingTime)
-	      time_to_live.push(timer)
+         
+              hashes.push(key)
               //Generate the object
-              var newPerson = new Person([x[i],y[i]],time_to_live[i]);
+              var newPerson = new Person([x_cor,y_cor],getRandomInt(this.minLivingTime, this.maxLivingTime));
 	      newPerson.init(i+1);
 	   }
 	}
 
 
-       /**
-        * Check if the array already contains the element
-        */
-	function include(arr,obj) {
-   		 return (arr.indexOf(obj) != -1);
-	}
-
- 
 	/**
 	 * Generates a Random Integer between min and max
 	 */
