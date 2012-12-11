@@ -69,11 +69,12 @@ var Person = function(cordinates,timer){
 	        y: getCanvasXY[1],
 	        radius: 5,
 	        fill: 'green',
+	        id:this.personId,
 	        stroke: 'black',
 	        strokeWidth: 1
       		});
 
-		AmbulanceView.addObjectToLayer(this.personUI);
+		AmbulanceView.addPersonToLayer(this.personUI);
 	}
 
 	/**
@@ -90,6 +91,8 @@ var Person = function(cordinates,timer){
 	 */
 	this.hidePerson = function(){
 		this.personDisplayed = false;
+		this.personUI.remove();
+		AmbulanceView.updatePersonLayer();
 
 		/**
 		 * Call the UI to remove the person and it's events from the UI.The Person has been picked by the ambulance.
@@ -112,7 +115,8 @@ var Person = function(cordinates,timer){
 	this.markPersonDead = function(){
 		//Only marks the UI for the person as dead when the person is on the streets rather than in ambulance or hospital.
 		if(this.personDisplayed){
-			this.updateDeadUI();
+			this.personUI.remove();
+			AmbulanceView.updatePersonLayer();
 			//Also add to dead person count by calling the context.
 		}else{
 			//Call the context to increase the dead person count.
@@ -125,7 +129,9 @@ var Person = function(cordinates,timer){
 		 * Person can only be said to remain alive when it reaches hospital by ambulance.
 		 * In that case update the context to increament the counter of the person saved.
 		 */
-		if(!this.personDisplayed){
+		AmbulanceContext.personSaved();
+		if(this.personDisplayed){
+			this.hidePerson();
 			//Call the context to increase the alive person count.
 		}
 	}

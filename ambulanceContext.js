@@ -10,19 +10,22 @@ var ambulanceContext = function(ambulanceMain){
 
 	this.hospitals = {};
 
+	this.ambulanceObjectMoving = null;
+
         //Map of People Currently in the game. i.e It does not include dead people or people who have reached the hospital
 	this.persons = {};
 
 	this.registeredHospitals = 0;
 
 	this.savedPersons = 0;	
+	this.deadPerson = 0;
      
         //Used to Generate Living time of people
         this.minLivingTime = 30
         this.maxLivingTime = 50
 
 	this.init = function(){
-          this.generatePersonMap()
+          this.generatePersonMap();
 	}
 
 	/**
@@ -58,7 +61,18 @@ var ambulanceContext = function(ambulanceMain){
 	   }
 	}
 
+	this.setAmbulanceMoving = function(hospitalId,ambulanceId){
+		if(!this.ambulanceObjectMoving){
+			this.ambulanceObjectMoving = this.hospitals[hospitalId].getAmbulanceObject(ambulanceId);
+			this.hospitals[hospitalId].removeAmbulance(ambulanceId);
+			this.ambulanceObjectMoving.selectAmbulance();
+		}
+	}
 
+	this.pickPerson = function(personId){
+		var personObj = this.persons[personId];
+		this.ambulanceObjectMoving.pickPerson(personObj);
+	}
 	/**
 	 * Generates a Random Integer between min and max
 	 */
@@ -66,6 +80,14 @@ var ambulanceContext = function(ambulanceMain){
 	    return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
+	this.moveAmbulanceToHospital = function(hospitalId){
+		if(this.ambulanceObjectMoving){
+			console.log("amulance added to hospital " + hospitalId);
+			console.log(this.hospitals[hospitalId]);
+			this.hospitals[hospitalId].addAmbulance(this.ambulanceObjectMoving);
+			this.ambulanceObjectMoving = null;
+		}
+	}
 
 
 	/**
@@ -85,7 +107,7 @@ var ambulanceContext = function(ambulanceMain){
 	this.registerHospital = function(hospitalCord,hospitalId){
 		if(!this.hospitals[hospitalId]){
 			this.hospitals[hospitalId] = new Hospital(hospitalCord);
-			this.hospitals[hospitalId].init(hospitalCord);
+			this.hospitals[hospitalId].init(hospitalId);
 			this.registeredHospitals++;
 			console.log(this.registeredHospitals);
 			if(this.registeredHospitals == this.numberOfHospitals){
@@ -116,6 +138,10 @@ var ambulanceContext = function(ambulanceMain){
 
 	}
 
+	this.getHospital = function(hospitalId){
+		return this.hospitals[hospitalId];
+	}
+
 
         /**
          *  Returns the Manhattan Distance between the two points
@@ -132,7 +158,7 @@ var ambulanceContext = function(ambulanceMain){
 	this.personSaved = function() {
 	   this.savedPersons++;
 	   //Update the UI
-	   AmbulanceView.updateScore(this.savedPersons, this.numberOfPersons - this.savedPersons);
+	   AmbulanceView.updateScore(this.savedPersons);
         }
 
 	/**

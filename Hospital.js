@@ -26,6 +26,10 @@ var Hospital = function(cordinate){
 	this.hospitalId = null;
 
 
+	this.AmbulanceBoxWidth = 100;
+
+	this.AmbulanceBoxHeight = 50;
+
 	/**
 	 * Inits the Hospital.Loads it with ambulances.Create Object of Ambulances.
 	 * @return {[type]}
@@ -34,13 +38,15 @@ var Hospital = function(cordinate){
 
 		this.hospitalId = hospitalId;
 		for(var ambulanceNumber = 0; ambulanceNumber < this.numberOfAmbulance; ambulanceNumber++){
-			this.ambulances.push(new Ambulance(this.numberOfAmbulance*hospitalId + ambulanceNumber,this.cordinate));
+			var ambulance = new Ambulance();
+			ambulance.init(this.numberOfAmbulance*hospitalId + ambulanceNumber,this.cordinate);
+			this.ambulances.push(ambulance);
 		}
 
 	}
 
 	this.updateCordinate = function(cordinate){
-		this.cordiante = cordinate;
+		this.cordinate = cordinate;
 	}
 
 	/**
@@ -76,8 +82,11 @@ var Hospital = function(cordinate){
 	 * @param {[Ambulance]} ambulance [description]
 	 */
 	this.addAmbulance = function(ambulance){
-		ambulance.updateCordinateOfAmbulance(this.cordiante);
+		console.log(ambulance);
 		this.ambulances.push(ambulance);
+		console.log(this.ambulances);
+		ambulance.updateCordinateOfAmbulance(this.cordinate);
+		ambulance.registerToHospital();
 	}
 
 	/**
