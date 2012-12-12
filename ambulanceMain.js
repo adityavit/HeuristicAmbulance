@@ -19,10 +19,12 @@ var ambulanceMain = function(){
 	}
 	this.loadDependencies = function(){
 		AmbulanceView = new ambulanceView(this);
+		AmbulanceContext = new ambulanceContext(this);
 		AmbulanceView.init();
+		AmbulanceContext.init();
 		AmbulanceView.drawPath([[5,5],[5,6],[6,6]]);
-		var testPerson = new Person([5,10],12);
-		testPerson.init(1);
+		//var testPerson = new Person([15,10],12);
+		//testPerson.init(1);
 	}
 
 	this.load = function(){

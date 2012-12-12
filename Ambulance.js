@@ -39,11 +39,12 @@ var Ambulance = function(){
 	 * @return {[type]}           [description]
 	 */
 	this.updateCordinateOfAmbulance = function(cordinate){
+		this.ambulanceCounterValue = this.ambulanceCounterValue + AmbulanceContext.getPathDistance(this.ambulanceCordinate,cordinate);
 		this.ambulanceCordinate = cordinate;
 
 		//Shows the ambulance updated UI on the Grid if it is not in the hospital i.e. it is not selected.
 		if(this.ambulanceSelected){
-			this.showAmbulance();
+			this.updateAmbulanceCounterOnUI();
 		}
 	}
 
@@ -55,12 +56,19 @@ var Ambulance = function(){
 		this.ambulanceSelected = true;
 	}
 
+	this.getCordinates = function(){
+		return this.ambulanceCordinate;
+	}
+
+	this.loadUI = function(){
+
+	}
 	/**
 	 * Shows the ambulance.Should call the UI to show it on the grid providing with co-ordinate.
 	 * @return {[type]}
 	 */
-	this.showAmbulance = function(){
-		//Calls the UI to show the ambulance on the current co-ordinate Value.
+	this.updateAmbulanceCounterOnUI = function(){
+		AmbulanceView.updateAmbulanceUI(this.ambulanceCounterValue,this.ambulanceCordinate);
 	}
 
 
@@ -73,6 +81,7 @@ var Ambulance = function(){
 	 */
 	this.pickPerson = function(personObj){
 		// Pick the person only when the person is alive else mark the person as dead on the UI.
+		this.updateCordinateOfAmbulance(personObj.getCordinates());
 		if(personObj.isPersonAlive(this.ambulanceCounterValue)){
 			this.personList.push(personObj);
 			personObj.pickedByAmbulance();
@@ -96,7 +105,7 @@ var Ambulance = function(){
 	 * @param  {[type]} hospital [description]
 	 * @return {[type]}
 	 */
-	this.registerToHospital = function(hospital){
+	this.registerToHospital = function(){
 		var numberOfPersonInAmbulance = this.personList.length;
 		for(person in this.personList){
 			//if the person is alive then ask the person object to update the context with alive person count.
@@ -121,6 +130,5 @@ var Ambulance = function(){
 		//As ambulance reaches Hospital it not selected any more.
 		this.ambulanceSelected = false;
 
-		hospital.addAmbulance(this);
 	}
 }
