@@ -192,20 +192,26 @@ var ambulanceContext = function(ambulanceMain){
 	 *  
 	 */
 	this.personUIUpdateOnAmbulanceSelection = function(ambid,hid) {
-	   var h_cor = this.hospitals[hid].getCordinates();
-	   var h_amb = this.hospitals[hid].getAmbulanceObject(ambid);
+	   if(hid){
+		   var h_cor = this.hospitals[hid].getCordinates();
+		   var h_amb = this.hospitals[hid].getAmbulanceObject(ambid);
+		}else{
+			var h_cor = this.ambulanceObjectMoving.getCordinates();
+		   var h_amb = this.ambulanceObjectMoving;
+		}
 	   for(pid in this.persons) 
 	   {
 		if(this.persons[pid].isPersonAlive( h_amb.getAmbulanceCounterValue() 
 						    + this.getPathDistance(h_cor,this.persons[pid].getCordinates()) )) 
 		{
-		    this.persons[pid].updateAliveUI()	
+		    this.persons[pid].updateAliveUI();
 		}
 		else
-		{
-		    this.persons[pid].updateDeadUI()
-		}
+			{
+			    this.persons[pid].updateDeadUI();
+			}
 	   }
+	   		AmbulanceView.updatePersonLayer();
         }
 
 	/**

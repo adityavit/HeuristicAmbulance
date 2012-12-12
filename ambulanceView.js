@@ -544,6 +544,7 @@ var ambulanceView = function(ambulanceMain){
 				AmbulanceView.ambulanceSelected = {id:evt.shape.getParent().getChildren()[0].getId(),
 												 node:evt.shape.getParent(),
 												 layer:this};
+				AmbulanceView.updatePersonMap();
 			}else{
 				AmbulanceView.ambulanceSelected["node"].getChildren()[0].setStroke("black");
 				evt.shape.getParent().getChildren()[0].setStroke("red");
@@ -551,11 +552,21 @@ var ambulanceView = function(ambulanceMain){
 												 node:evt.shape.getParent(),
 												 layer:this};
 				this.draw();
+				AmbulanceView.updatePersonMap();
 			}
 		});
 	    this.addAmbulancesToLayer(ambulanceLayer);
 	}
 
+	this.updatePersonMap = function(){
+		console.log("inside updatePersonMap");
+		if(this.hospitalSelected && this.ambulanceSelected && !this.movingAmbulanceSelected){
+			console.log("inside updatePersonMap");
+			AmbulanceContext.personUIUpdateOnAmbulanceSelection(this.ambulanceSelected["node"].getId(),this.hospitalSelected["node"].getId());
+		}else{
+			AmbulanceContext.personUIUpdateOnAmbulanceSelection(this.ambulanceSelected["node"].getId(),null);
+		}
+	}
 	this.addPersonLayerEvent = function(){
 		this.personLayer.moveToTop();
 		this.personLayer.on("mousedown",function(evt){
@@ -617,7 +628,6 @@ var ambulanceView = function(ambulanceMain){
 				AmbulanceView.createAmbulanceSelectionView();
 			}
 		});
-		alert("Game Started");
 	}
 
 }

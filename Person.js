@@ -115,6 +115,7 @@ var Person = function(cordinates,timer){
 	this.markPersonDead = function(){
 		//Only marks the UI for the person as dead when the person is on the streets rather than in ambulance or hospital.
 		if(this.personDisplayed){
+			AmbulanceContext.removePlayingPerson(this.personId);
 			this.personUI.remove();
 			AmbulanceView.updatePersonLayer();
 			//Also add to dead person count by calling the context.
@@ -129,6 +130,7 @@ var Person = function(cordinates,timer){
 		 * Person can only be said to remain alive when it reaches hospital by ambulance.
 		 * In that case update the context to increament the counter of the person saved.
 		 */
+		AmbulanceContext.removePlayingPerson(this.personId);
 		AmbulanceContext.personSaved();
 		if(this.personDisplayed){
 			this.hidePerson();
@@ -142,7 +144,7 @@ var Person = function(cordinates,timer){
 	 * @return {[type]} [description]
 	 */
 	this.updateDeadUI = function(){
-
+		this.personUI.setFill("red");
 	}
 
 	/**
@@ -151,7 +153,7 @@ var Person = function(cordinates,timer){
 	 * @return {[type]} [description]
 	 */
 	this.updateAliveUI = function(){
-
+		this.personUI.setFill("green");
 	}
 
 	/**

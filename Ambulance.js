@@ -56,6 +56,10 @@ var Ambulance = function(){
 		this.ambulanceSelected = true;
 	}
 
+	this.getCordinates = function(){
+		return this.ambulanceCordinate;
+	}
+
 	this.loadUI = function(){
 
 	}
